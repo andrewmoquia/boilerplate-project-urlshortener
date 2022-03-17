@@ -47,8 +47,9 @@ app.post('/api/shorturl', function(req, res) {
 
   try {
     new URL(url)
-  } catch(_) {
+  } catch(err) {
     res.json({ error: 'invalid url' })
+    if(err) throw err;
   }
   
   SHORTEN_URL.count({}, (err, count) => {
@@ -60,7 +61,7 @@ app.post('/api/shorturl', function(req, res) {
     })
 
     createURL.save((err, done) => {
-      if(err) console.log(err);
+      if(err) throw err;
       const {original_url, short_url} = done;
       res.json({original_url, short_url});
     })
