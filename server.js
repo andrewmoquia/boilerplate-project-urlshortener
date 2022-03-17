@@ -45,12 +45,11 @@ app.get('/api/hello', function(req, res) {
 app.post('/api/shorturl', function(req, res) {
   const { url } = req.body;
 
-  try {
-    new URL(url)
-  } catch(err) {
-    res.json({ error: 'invalid url' })
-    if(err) throw err;
+  const regex = /(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+  if(!regex.test(url)) {
+    res.json({ error: 'invalid url' });
   }
+  
   
   SHORTEN_URL.count({}, (err, count) => {
     if(err) throw err;
